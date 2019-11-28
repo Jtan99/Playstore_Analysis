@@ -1,10 +1,13 @@
 import pandas as pd
 import numpy as np
+import datetime
+from datetime import date
 
-def main(in_directory):
-	data = pd.read_csv(in_directory)
+in_directory = 'googleplaystore.csv'
 
- if __name__=='__main__':
-	in_directory = sys.argv[1]
-	# out_directory = sys.argv[2]
-	main(in_directory)
+data = pd.read_csv(in_directory,parse_dates=['Last Updated'])
+
+data['Price'] = data['Price'].str.extract(r'(\d+.\d+)')[0].astype('float32')
+data['Price'] = data['Price'].fillna(0)
+
+paid = data[data['Type'] == "Paid"]
