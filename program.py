@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import scipy
-# import scikit_posthocs as sp
+import scikit_posthocs as sp
 from datetime import date
 from scipy import stats
 
@@ -27,23 +27,23 @@ rank = category.groupby(['Category']).agg('count').sort_values('App', ascending 
 
 # --getting the top 5 --
 rankLst = rank.index.values.tolist()
-rank1 = category[category['Category'] == rankLst[0]]
-rank2 = category[category['Category'] == rankLst[1]]
-rank3 = category[category['Category'] == rankLst[2]]
-rank4 = category[category['Category'] == rankLst[3]]
-rank5 = category[category['Category'] == rankLst[4]]
+rank1 = category[category['Category'] == rankLst[0]].reset_index()
+rank2 = category[category['Category'] == rankLst[1]].reset_index()
+rank3 = category[category['Category'] == rankLst[2]].reset_index()
+rank4 = category[category['Category'] == rankLst[3]].reset_index()
+rank5 = category[category['Category'] == rankLst[4]].reset_index()
 
-stats.levene(rank1['Installs'],rank2['Installs']).pvalue
+var = stats.levene(rank1['Installs'],rank2['Installs']).pvalue
+print('Levene test for equal variance p-value:', var)
 
-Anova = stats.kruskal(rank1['Installs'], rank2['Installs'], rank3['Installs'], rank4['Installs'], rank5['Installs'])
-print(Anova)
-print(Anova.pvalue)
+# -- doing an kruskal test, similar to anova but for unequal var and sample size
+Kruskal = stats.kruskal(rank1['Installs'], rank2['Installs'], rank3['Installs'], rank4['Installs'], rank5['Installs'])
+print(Kruskal)
+# print(Kruskal.pvalue)
 
-# not done yet
-# x_data = pd.DataFrame({'x1':rank1['Installs'], 'x2':rank2['Installs'], 'x3':rank3['Installs'], 'x4':rank4['Installs'], 'x5':rank5['Installs']})
-# x_melt = pd.melt(x_data)
-# posthoc = sp.posthoc_tamhane(
-#     x_melt['value'], x_melt['variable'],
-#     alpha=0.05)
+# -- Doing a posthoc tamhane test, similar to tukey but for unequal var and sample size --
+x = pd.concat([rank1['Installs'],rank2['Installs'],rank3['Installs'],rank4['Installs'],rank5['Installs']], ignore_index=True, axis=1)
+x = x.melt(var_name='groups', value_name='values')
+posthoc = sp.posthoc_tamhane(x, val_col='values', group_col='groups')
 
-# print(posthoc)
+print(posthoc)
