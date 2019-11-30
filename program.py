@@ -78,3 +78,20 @@ x = x.melt(var_name='groups', value_name='values')
 posthoc = sp.posthoc_tamhane(x, val_col='values', group_col='groups')
 
 print(posthoc)
+
+# -- d is number of reviews for the app
+d = data['Reviews']
+
+# -- R is average rating for the APP
+R = data['Rating']
+
+# -- m is min number of reviews to be listed in top 250
+top250 = data.sort_values('Reviews',ascending=False)
+top250 = top250[:250]
+m = top250['Reviews'].iloc[249]
+
+# -- C is the mean amount of reviews across whole
+C = data['Reviews'].mean()
+
+score = (d/(d+m))*R+(m/(d+m))
+data['score'] = score
