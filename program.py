@@ -77,7 +77,7 @@ time_price_fit = stats.linregress(paid_timestamp,paid['Price'])
 
 price_predict = paid_timestamp*time_price_fit.slope + time_price_fit.intercept
 
-plt.figure()
+
 plt.plot(paid['Last Updated'], paid['Price'], 'b.', alpha=0.5)
 plt.plot(paid['Last Updated'], price_predict, 'r-', linewidth=3)
 plt.xlabel('Last update')
@@ -148,6 +148,7 @@ plt.savefig('posthoc')
 mean = x.groupby('groups')['values'].mean()
 std = x.groupby('groups')['values'].std()
 
+plt.figure()
 plt.errorbar(mean.index, mean, xerr=0.5, yerr=2*std,fmt='o')
 plt.title('Multiple Comparisons between All Pairs')
 plt.ylabel('score')
