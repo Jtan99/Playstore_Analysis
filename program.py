@@ -75,7 +75,7 @@ paid_timestamp = paid['Last Updated'].apply(to_timestamp)
 time_price_fit = stats.linregress(paid_timestamp,paid['Price'])
 price_predict = paid_timestamp*time_price_fit.slope + time_price_fit.intercept
 
-plt.figure(figsize=(10,5))
+plt.figure(figsize=(15,5))
 plt.subplot(1,2,1)
 
 plt.plot(paid['Last Updated'], paid['Price'], 'b.', alpha=0.5)
@@ -99,18 +99,23 @@ plt.title('Change in Ratings over time')
 # plt.show()
 plt.savefig('Time vs Rating')
 
-# null hyp = slope is zero
-# Ha = slope is nonzero
-# check if normal for OLS pvalue
+
+# -- can we use OLS test to check if slope is nonzero? need to check normality of residuals
 rate_residuals = data['Rating'] - (time_rate_fit.slope*timestamp + time_rate_fit.intercept)
+price_residuals = paid['Price'] - (time_price_fit.slope*paid_timestamp + time_price_fit.intercept)
+
+plt.figure(figsize=(10,5))
+plt.subplot(1,2,1)
+plt.hist(price_residuals)
+plt.title('Price Residuals histogram')
+
+plt.subplot(1,2,2)
 plt.hist(rate_residuals,25)
+plt.title('Ratings Residuals histogram')
+plt.savefig('Residual normality check')
 
-# print("pvalue for Price OLS test:", time_price_fit.pvalue)
-# print("failed to reject null hypothesis\n")
 print("pvalue for Rating OLS test:", time_rate_fit.pvalue)
-print("strong evidence to reject null hypothesis")
-
-
+print("strong evidence to reject null hypothesis: Ratings do change over time")
 
 
 category = data[['Category','App','score']].copy()
