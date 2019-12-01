@@ -55,6 +55,7 @@ data['score'] = score
 # --rank score end --
 
 paid = data[data['Type'] == "Paid"].copy()		# table of paid apps only
+paid = paid[paid['Price']<100]
 free = data[data['Type'] == "Free"].copy()
 
 free['r_group'] = group_rating(free['Rating'])
@@ -72,11 +73,10 @@ paid_timestamp = paid['Last Updated'].apply(to_timestamp)
 #LINEAR REGRESSION on price of apps compared to the last update time
 #Do more recent/ recently updated apps cost more?
 time_price_fit = stats.linregress(paid_timestamp,paid['Price'])
-# time_rating_fit = stats.linregress(paid_timestamp,paid['Rating'])
-
-
 price_predict = paid_timestamp*time_price_fit.slope + time_price_fit.intercept
 
+plt.figure(figsize=(10,5))
+plt.subplot(1,2,1)
 
 plt.plot(paid['Last Updated'], paid['Price'], 'b.', alpha=0.5)
 plt.plot(paid['Last Updated'], price_predict, 'r-', linewidth=3)
@@ -86,14 +86,31 @@ plt.title('Change in Price over time')
 # plt.show()
 plt.savefig('Time vs Price')
 
-# may or may not be useful?
-	# plt.figure()
-	# rating_predict = paid_timestamp*time_rating_fit.slope + time_rating_fit.intercept
-	# plt.plot(paid['Last Updated'], paid['Rating'], 'b.', alpha=0.5)
-	# plt.plot(paid['Last Updated'], rating_predict, 'r-', linewidth=3)
-	# plt.xlabel('Last update')
-	# plt.ylabel('Price')
-	# plt.title('Change in Rating over time')
+
+time_rate_fit = stats.linregress(timestamp,data['Rating'])
+rate_predict = timestamp*time_rate_fit.slope + time_rate_fit.intercept
+
+plt.subplot(1,2,2)
+plt.plot(data['Last Updated'], data['Rating'], 'b.', alpha=0.5)
+plt.plot(data['Last Updated'], rate_predict, 'r-', linewidth=3)
+plt.xlabel('Last update')
+plt.ylabel('Rating')
+plt.title('Change in Ratings over time')
+# plt.show()
+plt.savefig('Time vs Rating')
+
+# null hyp = slope is zero
+# Ha = slope is nonzero
+# check if normal for OLS pvalue
+rate_residuals = data['Rating'] - (time_rate_fit.slope*timestamp + time_rate_fit.intercept)
+plt.hist(rate_residuals,25)
+
+# print("pvalue for Price OLS test:", time_price_fit.pvalue)
+# print("failed to reject null hypothesis\n")
+print("pvalue for Rating OLS test:", time_rate_fit.pvalue)
+print("strong evidence to reject null hypothesis")
+
+
 
 
 category = data[['Category','App','score']].copy()
