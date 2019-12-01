@@ -143,3 +143,13 @@ print(X)	# Numpy array where 0 is False (not significant), 1 is True (significan
 plt.figure()
 sp.sign_plot(X, flat = True)
 plt.savefig('posthoc')
+
+# -- Graph the visualization of the mean of each group and their confidence intervals
+mean = x.groupby('groups')['values'].mean()
+std = x.groupby('groups')['values'].std()
+
+plt.errorbar(mean.index, mean, xerr=0.5, yerr=2*std,fmt='o')
+plt.title('Multiple Comparisons between All Pairs')
+plt.ylabel('score')
+plt.xlabel('Rank')
+plt.savefig('Errorbar comparison')
