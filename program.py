@@ -12,6 +12,17 @@ in_directory = 'googleplaystore.csv'
 def to_timestamp(x):
     return x.timestamp()
 
+def single_rating(rating):
+    if rating<=1.7:
+        return 'bad'
+    elif rating<=3.3:
+        return 'average'
+    else:
+        return 'excellent'
+
+group_rating = np.vectorize(single_rating,
+        otypes=[np.string_])
+
 data = pd.read_csv(in_directory)
 data = data.dropna()
 
@@ -43,8 +54,17 @@ score = (d/(d+m))*R+(m/(d+m))
 data['score'] = score
 # --rank score end --
 
-paid = data[data['Type'] == "Paid"]		# table of paid apps only
+paid = data[data['Type'] == "Paid"].copy()		# table of paid apps only
+free = data[data['Type'] == "Free"].copy()
 
+free['r_group'] = group_rating(free['Rating'])
+paid['r_group'] = group_rating(paid['Rating'])
+
+contingency = [[len(free[free['r_group'] == b'bad']),len(free[free['r_group'] == b'average']),len(free[free['r_group'] == b'excellent'])],
+               [len(paid[paid['r_group'] == b'bad']),len(paid[paid['r_group'] == b'average']),len(paid[paid['r_group'] == b'excellent'])]]
+
+chi2, p, dof, expected = stats.chi2_contingency(contingency)
+print('Chi square p-value:',p)
 # convert datetime column to int timestamp so we can plot it
 # timestamp = data['Last Updated'].apply(to_timestamp)
 paid_timestamp = paid['Last Updated'].apply(to_timestamp)
@@ -57,15 +77,17 @@ time_price_fit = stats.linregress(paid_timestamp,paid['Price'])
 
 price_predict = paid_timestamp*time_price_fit.slope + time_price_fit.intercept
 
+plt.figure()
 plt.plot(paid['Last Updated'], paid['Price'], 'b.', alpha=0.5)
 plt.plot(paid['Last Updated'], price_predict, 'r-', linewidth=3)
 plt.xlabel('Last update')
 plt.ylabel('Price')
 plt.title('Change in Price over time')
+# plt.show()
 plt.savefig('Time vs Price')
 
 # may or may not be useful?
-
+	# plt.figure()
 	# rating_predict = paid_timestamp*time_rating_fit.slope + time_rating_fit.intercept
 	# plt.plot(paid['Last Updated'], paid['Rating'], 'b.', alpha=0.5)
 	# plt.plot(paid['Last Updated'], rating_predict, 'r-', linewidth=3)
@@ -76,16 +98,21 @@ plt.savefig('Time vs Price')
 
 category = data[['Category','App','score']].copy()
 rank = category.groupby(['Category']).agg('count').sort_values('App', ascending = False)
-# group = data.groupby(['Category','Installs']).agg('count')
 
 # -- creating a bar graph for the market share --
 bargraph = pd.DataFrame()
 bargraph['Count'] = rank['App']
+bargraph = bargraph.reset_index()
 print(bargraph)
 
-plt.figure()
-bargraph.plot.bar()
-sizes = np.array(rank['App'])
+plt.figure(num=None, figsize=(10, 6), dpi=80, facecolor='w', edgecolor='k')
+plt.title('Market share bar graph')
+plt.xlabel('category')
+plt.ylabel('count')
+plt.xticks(range(len(bargraph['Category'])), bargraph['Category'], rotation=90)
+plt.tight_layout()
+plt.bar(bargraph['Category'],bargraph['Count'])
+# plt.show()
 plt.savefig('marketShare')
 
 # --getting the top 5 --
