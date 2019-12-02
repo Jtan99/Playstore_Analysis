@@ -20,6 +20,7 @@ To run the program enter the following command
 
 If the program compiles correctly, there should be 4 saved figures
 
+
 	Regression Graphs.png
 Two graphs showing the regression graph of Price vs Time and Rating vs Time
 
