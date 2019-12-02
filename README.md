@@ -14,20 +14,20 @@ scipy 1.3.3
 	pip install scipy
 
 Start up:
-create a local directory by entering the following command in a terminal
-
-	git clone https://github.com/eriekl6/CMPT-353-Project.git
-
-change into the folder containing the project
-
-	cd CMPT-353-project
-
 To run the program enter the following command
 
 	python program.py
 
-If the program compiles correctly, there should be 3 output files
+If the program compiles correctly, there should be 4 saved figures
 
-	Time vs Price.png
+	Regression Graphs.png
+Two graphs showing the regression graph of Price vs Time and Rating vs Time
+
+	Residual normality check.png
+Two histograms showing the distribution of the residuals, to check OLS assumption
+	
 	marketShare.png
-	posthoc.png
+A histogram of the amount of apps on the dataset based on their categories
+
+	posthoc and Errorbar comparison.png
+The results of our Dunn test: a significance plot, and a errorbar graph
