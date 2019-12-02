@@ -18,7 +18,7 @@ To run the program enter the following command
 
 	python program.py
 
-If the program compiles correctly, there should be 4 saved figures
+If the program compiles correctly, there should be 4 saved figures:  
 
 
 	Regression Graphs.png
