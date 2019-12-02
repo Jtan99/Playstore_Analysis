@@ -67,7 +67,7 @@ contingency = [[len(free[free['r_group'] == b'bad']),len(free[free['r_group'] ==
 chi2, p, dof, expected = stats.chi2_contingency(contingency)
 print('Chi square p-value:',p)
 # convert datetime column to int timestamp so we can plot it
-# timestamp = data['Last Updated'].apply(to_timestamp)
+timestamp = data['Last Updated'].apply(to_timestamp)
 paid_timestamp = paid['Last Updated'].apply(to_timestamp)
 
 #LINEAR REGRESSION on price of apps compared to the last update time
