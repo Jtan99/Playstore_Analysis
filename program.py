@@ -140,6 +140,9 @@ plt.savefig('marketShare')
 
 # --getting the largest 8 --
 groupLst = group.index.values.tolist()
+groupLst = groupLst[0:8]
+groupLst = np.sort(groupLst)
+
 group1 = category[category['Category'] == groupLst[0]].reset_index()
 group2 = category[category['Category'] == groupLst[1]].reset_index()
 group3 = category[category['Category'] == groupLst[2]].reset_index()
@@ -180,8 +183,9 @@ mean = x.groupby('Category')['score'].mean()
 std = x.groupby('Category')['score'].std()
 
 plt.subplot(1,2,2)
-plt.xticks(range(len(bargraph['Category'])), bargraph['Category'], rotation=30)
+plt.xticks(range(len(groupLst)), groupLst, rotation=30)
 plt.errorbar(mean.index, mean, yerr=2*std,fmt='o')
 plt.title('Multiple Comparisons between All Pairs')
 plt.ylabel('score')
 plt.xlabel('Category')
+plt.savefig('Errorbar comparison')
