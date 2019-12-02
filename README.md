@@ -1,4 +1,11 @@
 # CMPT-353-Project
+For this project, our topic of research will involve a dataset of information about mobile apps installed in the Google Play Store. The objective of our research is to find any general trends that can potentially be used to help make business decisions. There is a variety of possible questions to explore, but for this project, our main focus will be on the following questions:
+ 
+1. Are mobile apps getting more popular/well-received over the years? Are apps getting more expensive?
+2. Is there any correlation between the price of an app and the average rating? 
+3. What are the ranks of each app and is there a particular category that dominates the top app rankings?
+
+
 Program requirements:
 
 python 3.x
