@@ -22,13 +22,14 @@ If the program compiles correctly, there should be 4 saved figures:
 
 
 	Regression Graphs.png
-Two graphs showing the regression graph of Price vs Time and Rating vs Time
-
+	Two graphs showing the regression graph of Price vs Time and Rating vs Time  
+	
 	Residual normality check.png
-Two histograms showing the distribution of the residuals, to check OLS assumption
+	Two histograms showing the distribution of the residuals, to check OLS assumption  
 	
 	marketShare.png
-A histogram of the amount of apps on the dataset based on their categories
-
+	A histogram of the amount of apps on the dataset based on their categories  
+	
 	posthoc and Errorbar comparison.png
-The results of our Dunn test: a significance plot, and a errorbar graph
+	The results of our Dunn test: a significance plot, and a errorbar graph  
+	
