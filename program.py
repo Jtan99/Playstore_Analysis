@@ -36,7 +36,7 @@ data['Last Updated'] = pd.to_datetime(data['Last Updated'], format='%B %d, %Y')
 data['Reviews'] = data['Reviews'].astype(int)
 
 # --calculating a rank score --
-# -- d is number of reviews for the app
+# -- d is number of reviews for the APP
 d = data['Reviews']
 
 # -- R is average rating for the APP
@@ -138,7 +138,7 @@ plt.bar(bargraph['Category'],bargraph['Count'])
 # plt.show()
 plt.savefig('marketShare')
 
-# --getting the largest 5 --
+# --getting the largest 8 --
 groupLst = group.index.values.tolist()
 group1 = category[category['Category'] == groupLst[0]].reset_index()
 group2 = category[category['Category'] == groupLst[1]].reset_index()
