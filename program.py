@@ -167,7 +167,8 @@ posthoc = sp.posthoc_dunn(x, p_adjust = 'holm')
 print('\nPosthoc p-value results\n',posthoc)
 X = sp.sign_array(posthoc).astype('int32')
 print('\nInterpretation of posthoc\nwhere 0 is False (not significant), 1 is True (significant)\n',X)
-plt.figure()
+plt.figure(figsize=(15,5))
+plt.subplot(1,2,1)
 sp.sign_plot(X, flat = True)    # Red is not significant diff, Green is significant diff
 plt.savefig('posthoc')
 
@@ -178,10 +179,9 @@ x = pd.concat([group1[['Category','score']],group2[['Category','score']],group3[
 mean = x.groupby('Category')['score'].mean()
 std = x.groupby('Category')['score'].std()
 
-plt.figure()
+plt.subplot(1,2,2)
 plt.xticks(range(len(bargraph['Category'])), bargraph['Category'], rotation=30)
 plt.errorbar(mean.index, mean, yerr=2*std,fmt='o')
 plt.title('Multiple Comparisons between All Pairs')
 plt.ylabel('score')
 plt.xlabel('Category')
-plt.savefig('Errorbar comparison')
