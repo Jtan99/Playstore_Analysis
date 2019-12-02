@@ -84,7 +84,6 @@ plt.xlabel('Last update')
 plt.ylabel('Price')
 plt.title('Change in Price over time')
 # plt.show()
-plt.savefig('Time vs Price')
 
 
 time_rate_fit = stats.linregress(timestamp,data['Rating'])
@@ -97,7 +96,7 @@ plt.xlabel('Last update')
 plt.ylabel('Rating')
 plt.title('Change in Ratings over time')
 # plt.show()
-plt.savefig('Time vs Rating')
+plt.savefig('Regression Graphs')
 
 
 # -- can we use OLS test to check if slope is nonzero? need to check normality of residuals
@@ -173,7 +172,6 @@ print('\nInterpretation of posthoc\nwhere 0 is False (not significant), 1 is Tru
 plt.figure(figsize=(15,5))
 plt.subplot(1,2,1)
 sp.sign_plot(X, flat = True)    # Red is not significant diff, Green is significant diff
-plt.savefig('posthoc')
 
 # -- Graph the visualization of the mean of each group and their confidence intervals
 x = pd.concat([group1[['Category','score']],group2[['Category','score']],group3[['Category','score']],group4[['Category','score']],
