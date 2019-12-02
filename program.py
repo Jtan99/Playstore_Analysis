@@ -65,9 +65,9 @@ contingency = [[len(free[free['r_group'] == b'bad']),len(free[free['r_group'] ==
                [len(paid[paid['r_group'] == b'bad']),len(paid[paid['r_group'] == b'average']),len(paid[paid['r_group'] == b'excellent'])]]
 
 chi2, p, dof, expected = stats.chi2_contingency(contingency)
-print('Chi square p-value:',p)
+print('\n\nChi square p-value:',p)
 # convert datetime column to int timestamp so we can plot it
-# timestamp = data['Last Updated'].apply(to_timestamp)
+timestamp = data['Last Updated'].apply(to_timestamp)
 paid_timestamp = paid['Last Updated'].apply(to_timestamp)
 
 #LINEAR REGRESSION on price of apps compared to the last update time
@@ -114,18 +114,19 @@ plt.hist(rate_residuals,25)
 plt.title('Ratings Residuals histogram')
 plt.savefig('Residual normality check')
 
-print("pvalue for Rating OLS test:", time_rate_fit.pvalue)
+print("\n\npvalue for Rating OLS test:", time_rate_fit.pvalue)
 print("strong evidence to reject null hypothesis: Ratings do change over time")
 
 
 category = data[['Category','App','score']].copy()
-rank = category.groupby(['Category']).agg('count').sort_values('App', ascending = False)
+group = category.groupby(['Category']).agg('count').sort_values('App', ascending = False)
 
 # -- creating a bar graph for the market share --
 bargraph = pd.DataFrame()
-bargraph['Count'] = rank['App']
+bargraph['Count'] = group['App']
 bargraph = bargraph.reset_index()
-print(bargraph)
+print('\nMarket share table\n',bargraph,'\n')
+
 
 plt.figure(num=None, figsize=(10, 6), dpi=80, facecolor='w', edgecolor='k')
 plt.title('Market share bar graph')
@@ -137,36 +138,43 @@ plt.bar(bargraph['Category'],bargraph['Count'])
 # plt.show()
 plt.savefig('marketShare')
 
-# --getting the top 5 --
-rankLst = rank.index.values.tolist()
-rank1 = category[category['Category'] == rankLst[0]].reset_index()
-rank2 = category[category['Category'] == rankLst[1]].reset_index()
-rank3 = category[category['Category'] == rankLst[2]].reset_index()
-rank4 = category[category['Category'] == rankLst[3]].reset_index()
-rank5 = category[category['Category'] == rankLst[4]].reset_index()
+# --getting the largest 5 --
+groupLst = group.index.values.tolist()
+group1 = category[category['Category'] == groupLst[0]].reset_index()
+group2 = category[category['Category'] == groupLst[1]].reset_index()
+group3 = category[category['Category'] == groupLst[2]].reset_index()
+group4 = category[category['Category'] == groupLst[3]].reset_index()
+group5 = category[category['Category'] == groupLst[4]].reset_index()
+group6 = category[category['Category'] == groupLst[5]].reset_index()
+group7 = category[category['Category'] == groupLst[6]].reset_index()
+group8 = category[category['Category'] == groupLst[7]].reset_index()
 
 # -- checking is the variance equal for the groups --
-var = stats.levene(rank1['score'],rank2['score']).pvalue
+var = stats.levene(group1['score'],group2['score']).pvalue
 print('Levene test for equal variance p-value:', var)
 
-# -- doing an kruskal test, similar to anova but for unequal var and sample size
-Kruskal = stats.kruskal(rank1['score'], rank2['score'], rank3['score'], rank4['score'], rank5['score'])
-print(Kruskal)
+# -- doing an kruskal test, similar to anova but non-parametric and unequal sample size
+Kruskal = stats.kruskal(group1['score'], group2['score'], group3['score'], group4['score'],
+                        group5['score'],group6['score'],group7['score'],group8['score'])
+print('\n',Kruskal)
 # print(Kruskal.pvalue)
 
-# -- Doing a posthoc tamhane test, similar to tukey but for unequal var and sample size --
-x = pd.concat([rank1['score'],rank2['score'],rank3['score'],rank4['score'],rank5['score']], ignore_index=True, axis=1)
-x = x.melt(var_name='groups', value_name='values')
-posthoc = sp.posthoc_tamhane(x, val_col='values', group_col='groups')
+# -- Doing a posthoc dunn test, after kruskal, works for non-parametric and unequal sample size --
+x = [group1['score'].to_numpy(),group2['score'].to_numpy(),group3['score'].to_numpy(),group4['score'].to_numpy(),
+     group5['score'].to_numpy(),group6['score'].to_numpy(),group7['score'].to_numpy(),group8['score'].to_numpy()]
+posthoc = sp.posthoc_dunn(x, p_adjust = 'holm')
 
-print(posthoc)
+print('\nPosthoc p-value results\n',posthoc)
 X = sp.sign_array(posthoc).astype('int32')
-print(X)	# Numpy array where 0 is False (not significant), 1 is True (significant)
+print('\nInterpretation of posthoc\nwhere 0 is False (not significant), 1 is True (significant)\n',X)
 plt.figure()
-sp.sign_plot(X, flat = True)
+sp.sign_plot(X, flat = True)    # Red is not significant diff, Green is significant diff
 plt.savefig('posthoc')
 
 # -- Graph the visualization of the mean of each group and their confidence intervals
+x = pd.concat([group1['score'],group2['score'],group3['score'],group4['score'],
+               group5['score'],group6['score'],group7['score'],group8['score']], ignore_index=True, axis=1)
+x = x.melt(var_name='groups', value_name='values')
 mean = x.groupby('groups')['values'].mean()
 std = x.groupby('groups')['values'].std()
 

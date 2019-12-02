@@ -1,6 +1,7 @@
 # CMPT-353-Project
 Program requirements:
-	python 3.x
+
+python 3.x
 
 If you do not have the following libraries installed, Please enter the corresponding commands
 
@@ -8,7 +9,7 @@ scikit-posthocs 0.6.1
 
 	pip install scikit-posthocs
 
-scipy
+scipy 1.3.3
 
 	pip install scipy
 
@@ -24,3 +25,9 @@ change into the folder containing the project
 To run the program enter the following command
 
 	python program.py
+
+If the program compiles correctly, there should be 3 output files
+
+	Time vs Price.png
+	marketShare.png
+	posthoc.png
