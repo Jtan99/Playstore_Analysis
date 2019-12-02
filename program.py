@@ -172,15 +172,16 @@ sp.sign_plot(X, flat = True)    # Red is not significant diff, Green is signific
 plt.savefig('posthoc')
 
 # -- Graph the visualization of the mean of each group and their confidence intervals
-x = pd.concat([group1['score'],group2['score'],group3['score'],group4['score'],
-               group5['score'],group6['score'],group7['score'],group8['score']], ignore_index=True, axis=1)
-x = x.melt(var_name='groups', value_name='values')
-mean = x.groupby('groups')['values'].mean()
-std = x.groupby('groups')['values'].std()
+x = pd.concat([group1[['Category','score']],group2[['Category','score']],group3[['Category','score']],group4[['Category','score']],
+               group5[['Category','score']],group6[['Category','score']],group7[['Category','score']],group8[['Category','score']]],
+              ignore_index=True, axis=0)
+mean = x.groupby('Category')['score'].mean()
+std = x.groupby('Category')['score'].std()
 
 plt.figure()
-plt.errorbar(mean.index, mean, xerr=0.5, yerr=2*std,fmt='o')
+plt.xticks(range(len(bargraph['Category'])), bargraph['Category'], rotation=30)
+plt.errorbar(mean.index, mean, yerr=2*std,fmt='o')
 plt.title('Multiple Comparisons between All Pairs')
 plt.ylabel('score')
-plt.xlabel('Rank')
+plt.xlabel('Category')
 plt.savefig('Errorbar comparison')
