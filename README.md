@@ -21,9 +21,9 @@ scipy 1.3.3
 	pip install scipy
 
 Start up:
-To run the program enter the following command
+To run the program enter the following command with a CSV as input
 
-	python program.py
+	python program.py input
 
 If the program compiles correctly, there should be 4 saved figures:  
 
