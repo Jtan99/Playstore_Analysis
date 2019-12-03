@@ -21,7 +21,7 @@ scipy 1.3.3
 	pip install scipy
 
 Start up:
-To run the program enter the following command
+To run the program enter the following command with a CSV as input
 
 	python program.py input
 
