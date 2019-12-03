@@ -3,11 +3,13 @@ import numpy as np
 import datetime
 import scipy
 import scikit_posthocs as sp
+import sys
 import matplotlib.pyplot as plt
 from datetime import date
 from scipy import stats
 
-in_directory = 'googleplaystore.csv'
+
+in_directory = sys.argv[1]
 
 def to_timestamp(x):
     return x.timestamp()
