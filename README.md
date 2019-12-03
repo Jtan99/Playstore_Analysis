@@ -23,7 +23,7 @@ scipy 1.3.3
 Start up:
 To run the program enter the following command
 
-	python program.py
+	python program.py input
 
 If the program compiles correctly, there should be 4 saved figures:  
 
